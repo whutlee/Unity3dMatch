@@ -345,7 +345,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 88155361}
   m_LocalRotation: {x: .430926323, y: -.16737847, z: .867930114, w: .181616142}
-  m_LocalPosition: {x: -11.3460846, y: 3.77883267, z: 7.34724331}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1280,7 +1280,8 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 7542b71fc3c51904a80da3dd3ec4bb67, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: 7542b71fc3c51904a80da3dd3ec4bb67, type: 3}
   m_RootGameObject: {fileID: 1874150918}
   m_IsPrefabParent: 0
@@ -2035,6 +2036,14 @@ Prefab:
     - target: {fileID: 400108, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
       propertyPath: m_LocalScale.z
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d67ea9e17aa4de445b39e9c062603dd5, type: 2}
+    - target: {fileID: 9500000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
@@ -3073,6 +3082,73 @@ Transform:
   m_LocalScale: {x: 1, y: .99999994, z: 1}
   m_Children: []
   m_Father: {fileID: 365688660}
+--- !u!1 &1544884352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1544884356}
+  - 33: {fileID: 1544884355}
+  - 64: {fileID: 1544884354}
+  - 23: {fileID: 1544884353}
+  m_Layer: 0
+  m_Name: Plane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &1544884353
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1544884352}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 831dec8f75b2563409287c03a24b8103, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+--- !u!64 &1544884354
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1544884352}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &1544884355
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1544884352}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1544884356
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1544884352}
+  m_LocalRotation: {x: -.707106829, y: 0, z: 0, w: .707106829}
+  m_LocalPosition: {x: 0, y: .983336568, z: -1.17222839e-07}
+  m_LocalScale: {x: 2.5, y: 2, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &1571118635
 GameObject:
   m_ObjectHideFlags: 0
@@ -3247,6 +3323,14 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d67ea9e17aa4de445b39e9c062603dd5, type: 2}
+    - target: {fileID: 9500000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
   m_RootGameObject: {fileID: 1646825698}
@@ -3405,9 +3489,9 @@ Animator:
   m_GameObject: {fileID: 1646825698}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d67ea9e17aa4de445b39e9c062603dd5, type: 2}
   m_CullingMode: 1
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_AnimatePhysics: 0
 --- !u!1 &1668662257
 GameObject:
@@ -3910,7 +3994,6 @@ GameObject:
   - 4: {fileID: 1874150922}
   - 33: {fileID: 1874150921}
   - 23: {fileID: 1874150920}
-  - 95: {fileID: 1874150919}
   - 114: {fileID: 1874150923}
   m_Layer: 0
   m_Name: cube
@@ -3919,19 +4002,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &1874150919
-Animator:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 7542b71fc3c51904a80da3dd3ec4bb67,
-    type: 3}
-  m_PrefabInternal: {fileID: 553530633}
-  m_GameObject: {fileID: 1874150918}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 7542b71fc3c51904a80da3dd3ec4bb67, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_ApplyRootMotion: 1
-  m_AnimatePhysics: 0
 --- !u!23 &1874150920
 Renderer:
   m_ObjectHideFlags: 0
@@ -3982,6 +4052,8 @@ MonoBehaviour:
   m_Name: 
   JewelPre: {fileID: 100000, guid: 719793b7f07870a46936a4ecf0da485e, type: 2}
   DestroyPre: {fileID: 100000, guid: 4030a3b2e1016ad4f8950ba9074d04db, type: 2}
+  player: {fileID: 2137058088}
+  npc: {fileID: 1646825698}
   DestoryDelay: .5
   ChangeTurnDelay: 1.20000005
 --- !u!1 &1884122787
@@ -4756,9 +4828,9 @@ Animator:
   m_GameObject: {fileID: 2137058088}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 096f596ff155c554b9848dfbc7260c15, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d67ea9e17aa4de445b39e9c062603dd5, type: 2}
   m_CullingMode: 1
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_AnimatePhysics: 0
 --- !u!1 &2144295351
 GameObject:
