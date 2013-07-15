@@ -150,6 +150,10 @@ public class jewel : MonoBehaviour {
 	{
 		return m_Selected;
 	}
+	public bool IsCanFall()
+	{
+		return m_state==JewelState.enIdle||m_state==JewelState.enMoving;
+	}
 	public bool IsCanSwap()
 	{
 		return m_state==JewelState.enIdle;
