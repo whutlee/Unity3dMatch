@@ -441,12 +441,6 @@ public class game : MonoBehaviour
 			}
 		}
 	}
-	IEnumerator PlayAnim(Animator anim, int AnimID)
-	{
-		anim.SetInteger("Action",AnimID);
-		yield return new WaitForSeconds(0.2f);
-		anim.SetInteger("Action",0);		
-	}
 	
 	void OnAttack(JewelType type,int num,GameTurn turn)
 	{
@@ -454,8 +448,8 @@ public class game : MonoBehaviour
 		text = string.Format ("clear type:{0} clear num:{1}{2}", type, num,turn);
 		Debug.Log (text);
 		GameObject attacker = (turn == GameTurn.enYourTurn)? player : npc;
-		Animator anim = attacker.GetComponent<Animator>();
-		StartCoroutine(PlayAnim(anim,1));
+		player p = attacker.GetComponent<player>();
+		p.OnAttack(type,num);
 	}
 	// Update is called once per frame
 	bool IsOperateAvailable ()
