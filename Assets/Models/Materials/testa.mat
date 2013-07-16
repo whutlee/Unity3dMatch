@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Weapon
-  m_Shader: {fileID: 10512, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: testa
+  m_Shader: {fileID: 7, guid: 0000000000000000e000000000000000, type: 0}
   m_ShaderKeywords: []
   m_SavedProperties:
     serializedVersion: 2
@@ -16,16 +16,12 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 892e00559d6281b4c8e3708912d10f0a, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
+    m_Floats: {}
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .947761178, g: .417545706, b: 0, a: 1}
+        second: {r: .5, g: .5, b: .5, a: 1}
