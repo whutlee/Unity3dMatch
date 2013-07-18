@@ -8,7 +8,7 @@ public class game : MonoBehaviour
 	// Use this for initialization
 	public GameObject JewelPre ;
 	public GameObject DestroyPre;
-	public GameObject player;
+	public GameObject pc;
 	public GameObject npc;
 	public float DestoryDelay;
 	public float ChangeTurnDelay;
@@ -22,6 +22,9 @@ public class game : MonoBehaviour
 	internal GameTurn lastTurn;
 	private static game instance = null;
 	private int CurJewelNum=0;
+	private GameResult Result = GameResult.enNone;
+	public Texture texWin;
+	public Texture texLose;
 
 	public static game Instance {
 		get {
@@ -39,6 +42,14 @@ public class game : MonoBehaviour
 		
 		StartGame ();
 		
+	}
+	public void OnPlayerDie(player p)
+	{
+		player pl = pc.GetComponent<player>();
+		if(pl == p)
+			Result = GameResult.enLose;
+		else
+			Result = GameResult.enWin;
 	}
 
 	JewelType GetRandomTypeExcept (JewelType except1, JewelType except2)
@@ -447,7 +458,7 @@ public class game : MonoBehaviour
 		string text;
 		text = string.Format ("clear type:{0} clear num:{1}{2}", type, num,turn);
 		Debug.Log (text);
-		GameObject attacker = (turn == GameTurn.enYourTurn)? player : npc;
+		GameObject attacker = (turn == GameTurn.enYourTurn)? pc : npc;
 		player p = attacker.GetComponent<player>();
 		p.OnAttack(type,num);
 	}
@@ -652,5 +663,13 @@ public class game : MonoBehaviour
 		info.owner = lastTurn;
 		ClearInfos.Add (info);	
 		
+	}
+	
+	void OnGUI()
+	{
+		if(Result == GameResult.enWin)
+			GUI.DrawTexture(new Rect(200,100 ,256,128),texWin);	
+		else if(Result == GameResult.enLose)
+			GUI.DrawTexture(new Rect(200,100 ,256,128),texLose);	
 	}
 }

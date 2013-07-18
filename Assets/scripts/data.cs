@@ -10,6 +10,12 @@ public enum JewelType
 	enNum,
 };
 
+public enum GameResult
+{
+	enNone,
+	enWin,
+	enLose
+}
 public enum GameTurn
 {
 	enNone,

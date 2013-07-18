@@ -59,6 +59,8 @@ public class player : MonoBehaviour {
 	public void OnDie()
 	{
 		StartCoroutine(PlayAnim(2));
+		game g = GameObject.Find("cube").GetComponent<game>();
+		g.OnPlayerDie(this);
 	}
 	
 	void OnGUI()
@@ -70,8 +72,6 @@ public class player : MonoBehaviour {
 				
 		float blood_width = bloodSize.x * curhp/100;
 		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,bloodSize.x,bloodSize.y),blood_black);
-		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,blood_width,bloodSize.y),blood_red);
-
-	
+		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,blood_width,bloodSize.y),blood_red);	
 	}
 }
