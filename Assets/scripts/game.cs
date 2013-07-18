@@ -16,16 +16,18 @@ public class game : MonoBehaviour
 	private int LineNum = 6;
 	private jewel selected;
 	private float clickDelay = 0f;
+	private static game instance = null;
+	
+	
 	internal List<GridPos> markChanged = new List<GridPos> ();
 	internal List<ClearInfo>  ClearInfos = new List<ClearInfo> ();
 	internal GameTurn turn;
 	internal GameTurn lastTurn;
-	private static game instance = null;
 	private int CurJewelNum=0;
 	private GameResult Result = GameResult.enNone;
 	public Texture texWin;
 	public Texture texLose;
-
+	private int CurCombo=0;
 	public static game Instance {
 		get {
 			return instance;
@@ -275,10 +277,22 @@ public class game : MonoBehaviour
 
 	void StartGame ()
 	{
+		OnGameStart();
+		ClearMap();
 		ChangeTurn (GameTurn.enYourTurn);
-		Debug.Log ("game start");
 		GenerateMap ();
 			
+	}
+	
+	void EndGame()
+	{
+		OnGameEnd();
+		ChangeTurn(GameTurn.enNone);
+		ClearInfos.Clear();
+		markChanged.Clear();
+		CurCombo=0;
+		turn=GameTurn.enNone;
+		lastTurn=turn;
 	}
 	
 	public void MarkNeedCheck (List<GridPos> points)
@@ -372,7 +386,15 @@ public class game : MonoBehaviour
 			}
 		}
 		
-		if (Input.GetKey (KeyCode.A)) {
+		if(Input.GetKey (KeyCode.E))
+		{
+			EndGame();
+		}
+		else if(Input.GetKey (KeyCode.G))
+		{
+			StartGame();
+		}
+		else if (Input.GetKey (KeyCode.A)) {
 			if (selected)
 				selected.SetJewelType (JewelType.enIce);
 		} else if (Input.GetKey (KeyCode.S)) {
@@ -431,6 +453,7 @@ public class game : MonoBehaviour
 			if (ClearInfos.Count == 0 && IsAllJewelIdle () && markChanged.Count == 0) {
 				MakeSureHasSoulution();
 				Debug.Log ("wait for changing turn");
+				CurCombo=0;
 				StartCoroutine ("ToggleTurn", t);
 				yield break;
 						
@@ -449,7 +472,7 @@ public class game : MonoBehaviour
 			
 			if (info.deltaTime > info.ClearTime) {
 				ClearJewel (info.position);
-				OnAttack(info.type,info.position.Count,info.owner);
+				OnAttack(info.type,info.position.Count,info.owner,CurCombo++);
 				ClearInfos.RemoveAt (n);
 			} else {
 				ClearInfos [n] = info;
@@ -459,10 +482,18 @@ public class game : MonoBehaviour
 		FillJewels();
 	}
 	
-	void OnAttack(JewelType type,int num,GameTurn turn)
+	void OnGameEnd()
+	{
+		Debug.Log("game end");
+	}
+	void OnGameStart()
+	{
+		Debug.Log("game start");
+	}
+	void OnAttack(JewelType type,int num,GameTurn turn,int combo)
 	{
 		string text;
-		text = string.Format ("clear type:{0} clear num:{1}{2}", type, num,turn);
+		text = string.Format ("clear type:{0} clear num:{1}{2} combo:{3}", type, num,turn,combo);
 		Debug.Log (text);
 		GameObject attacker = (turn == GameTurn.enYourTurn)? pc : npc;
 		player p = attacker.GetComponent<player>();

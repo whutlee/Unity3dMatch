@@ -129,6 +129,10 @@ public class jewel : MonoBehaviour {
 			renderer.material.color=Color.green;
 		else if(m_type==JewelType.enStorm)
 			renderer.material.color=Color.cyan;
+		else if(m_type==JewelType.enAttack)
+			renderer.material.color=Color.magenta;
+		else if(m_type==JewelType.enDummy)
+			renderer.material.color=Color.gray;
 		if(m_Selected)
 		{
 			renderer.material.color/=3;
