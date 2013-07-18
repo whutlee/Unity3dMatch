@@ -311,7 +311,7 @@ public class game : MonoBehaviour
 			Jewels [clearPos [n].x, clearPos [n].y] = null;
 			DestoryJewel (obj);
 		}
-		FillJewels ();
+		//FillJewels ();
 	}
 
 	void FillJewels ()
@@ -327,7 +327,7 @@ public class game : MonoBehaviour
 				bool bFindSwapOne = false;
 
 				while (--bottom>=0) {
-					if (Jewels [i, bottom]) {
+					if (Jewels [i, bottom]&&Jewels [i, bottom].IsCanFall()) {
 						jewel swapObj = Jewels [i, bottom];
 						
 						Jewels [i, bottom] = null;
@@ -360,10 +360,15 @@ public class game : MonoBehaviour
 	void CheckHelpInput ()
 	{
 		if (Input.GetKey (KeyCode.C)) {
-			if (selected) {
-
+			if (IsOperateAvailable()) {
+				
+				DestoryJewel(Jewels[3,3]);
+				DestoryJewel(Jewels[3,4]);
 				Debug.Log ("check test");
-				//CheckMatch(selected.,true);
+				Jewels[3,3]=null;
+				Jewels[3,4]=null;
+				FillJewels();
+				ClearOperate();
 			}
 		}
 		
@@ -451,6 +456,7 @@ public class game : MonoBehaviour
 				n++;
 			}
 		}
+		FillJewels();
 	}
 	
 	void OnAttack(JewelType type,int num,GameTurn turn)
