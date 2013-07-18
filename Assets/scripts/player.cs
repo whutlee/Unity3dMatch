@@ -37,6 +37,12 @@ public class player : MonoBehaviour {
 		}
 	}
 	
+	public void OnGameStart()
+	{
+		curhp = hp = max_hp;
+		StartCoroutine(PlayAnim(5));		
+	}
+	
 	public void OnAttack(JewelType type,int num)
 	{
 		StartCoroutine(PlayAnim(1));

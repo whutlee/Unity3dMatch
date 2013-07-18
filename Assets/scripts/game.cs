@@ -27,6 +27,7 @@ public class game : MonoBehaviour
 	private GameResult Result = GameResult.enNone;
 	public Texture texWin;
 	public Texture texLose;
+	public Texture texRestart;
 	private int CurCombo=0;
 	public static game Instance {
 		get {
@@ -52,6 +53,7 @@ public class game : MonoBehaviour
 			Result = GameResult.enLose;
 		else
 			Result = GameResult.enWin;
+		EndGame();
 	}
 
 	JewelType GetRandomTypeExcept (JewelType except1, JewelType except2)
@@ -276,8 +278,11 @@ public class game : MonoBehaviour
 	}
 
 	void StartGame ()
-	{
+	{		
+		Result = GameResult.enNone;
 		OnGameStart();
+		pc.GetComponent<player>().OnGameStart();
+		npc.GetComponent<player>().OnGameStart();
 		ClearMap();
 		ChangeTurn (GameTurn.enYourTurn);
 		GenerateMap ();
@@ -704,9 +709,16 @@ public class game : MonoBehaviour
 	
 	void OnGUI()
 	{
-		if(Result == GameResult.enWin)
-			GUI.DrawTexture(new Rect(200,100 ,256,128),texWin);	
-		else if(Result == GameResult.enLose)
-			GUI.DrawTexture(new Rect(200,100 ,256,128),texLose);	
+		if(Result != GameResult.enNone)
+		{
+			if(Result == GameResult.enWin)
+				GUI.DrawTexture(new Rect(200,100 ,256,128),texWin);	
+			else if(Result == GameResult.enLose)
+				GUI.DrawTexture(new Rect(200,100 ,256,128),texLose);
+			if(GUI.Button(new Rect(500,330 ,128,64),texRestart))
+			{
+				StartGame();
+			}
+		}
 	}
 }
