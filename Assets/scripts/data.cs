@@ -6,6 +6,8 @@ public enum JewelType
 	enIce,
 	enFire,
 	enStorm,
+	enAttack,
+	enDummy,
 	enRecovery,
 	enNum,
 };
