@@ -40,12 +40,18 @@ public class player : MonoBehaviour {
 	public void OnGameStart()
 	{
 		curhp = hp = max_hp;
-		StartCoroutine(PlayAnim(5));		
+		StartCoroutine(PlayAnim(4));		
 	}
 	
-	public void OnAttack(JewelType type,int num)
+	public void OnAttack(JewelType type,int num,int combo)
 	{
-		StartCoroutine(PlayAnim(1));
+		if(combo == 0 )
+			StartCoroutine(PlayAnim(1));
+		else if(combo == 1 )
+			StartCoroutine(PlayAnim(5));
+		else
+			StartCoroutine(PlayAnim(6));
+			
 		player p = target.GetComponent<player>();
 		p.hp -= num * attack;
 		if(p.hp <= 0)

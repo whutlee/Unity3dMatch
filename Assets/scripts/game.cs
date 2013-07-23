@@ -502,7 +502,7 @@ public class game : MonoBehaviour
 		Debug.Log (text);
 		GameObject attacker = (turn == GameTurn.enYourTurn)? pc : npc;
 		player p = attacker.GetComponent<player>();
-		p.OnAttack(type,num);
+		p.OnAttack(type,num,combo);
 	}
 	// Update is called once per frame
 	bool IsOperateAvailable ()
