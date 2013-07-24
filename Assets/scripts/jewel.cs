@@ -9,8 +9,10 @@ public class jewel : MonoBehaviour {
 	private int m_y;
 	private int m_tx;
 	private int m_ty;
-	public GameObject m_obj;
-	internal bool m_Selected=false;
+	public GameObject m_obj;	
+	internal bool m_bMoving=false;
+
+	internal GameObject[] m_FaceObj = new GameObject[5];
 	
 	public  int ty
     {
@@ -54,13 +56,21 @@ public class jewel : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-	
+		if(m_obj)
+		{
+			m_FaceObj[(int)FaceAnim.enmDrag]=m_obj.transform.FindChild("boxface_drag").gameObject;
+			m_FaceObj[(int)FaceAnim.enmHit]=m_obj.transform.FindChild("boxface_hit").gameObject;
+			m_FaceObj[(int)FaceAnim.enmNormal]=m_obj.transform.FindChild("boxface_normal").gameObject;
+			m_FaceObj[(int)FaceAnim.enmTouch]=m_obj.transform.FindChild("boxface_touch").gameObject;
+		}
+		
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if(m_state==JewelState.enMoving)
+		if(m_bMoving)
 			OnMoving();
+	
 	}
 	void OnMoving()
 	{
@@ -68,6 +78,8 @@ public class jewel : MonoBehaviour {
 		{
 			Vector3 pos=game.Instance.GetPosFromGrid(m_tx,m_ty);
 			Vector3 NewPos = transform.position;
+			//Debug.Log("OnMoving");
+			//Debug.Log(transform.position);
 			if(NewPos.y>pos.y)
 			{
 				NewPos.y-=0.1f;
@@ -85,21 +97,25 @@ public class jewel : MonoBehaviour {
 			{
 				NewPos.x+=0.1f;
 			}
-			
+			//Debug.Log("NewPos");
+			//Debug.Log(NewPos);
 			transform.position=NewPos;
+
 			if((pos-NewPos).magnitude<0.01f)
 			{
 				m_x=m_tx;
 				m_y=m_ty;
 				transform.position=pos;
+				//Debug.Log("equal");
+				//Debug.Log(pos);
 				OnMoveEnd();
-				//print(this);
 			}
 		}
 	}
 	void OnMoveEnd()
 	{
-		m_state=JewelState.enIdle;
+		Debug.Log ("OnMoveEnd");
+		m_bMoving=false;
 		game.Instance.MarkNeedCheck(new GridPos(){x=X,y=Y});
 	}
 	public void MoveTo(int x,int y)
@@ -109,62 +125,119 @@ public class jewel : MonoBehaviour {
 		if(m_ty==m_y&&m_x==m_tx)
 			OnMoveEnd();
 		else
-			m_state=JewelState.enMoving;
+			m_bMoving=true;
 		//print(this);
 	}
 	public void SetJewelType(JewelType type)
 	{
 		m_type=type;
-		ShowState();
+		if(m_type==JewelType.enIce)
+			SetColor(Color.blue);
+		else if(m_type==JewelType.enFire)
+			SetColor(Color.red);
+		else if(m_type==JewelType.enRecovery)
+			SetColor(Color.green);
+		else if(m_type==JewelType.enStorm)
+			SetColor(Color.cyan);
+		else if(m_type==JewelType.enAttack)
+			SetColor(Color.magenta);
+		else if(m_type==JewelType.enDummy)
+			SetColor(Color.gray);
 		
 	}
-	void ShowState()
+	private IEnumerator WaitToShowColor(Color col)
 	{
-	
-		if(m_type==JewelType.enIce)
-			renderer.material.color=Color.blue;
-		else if(m_type==JewelType.enFire)
-			renderer.material.color=Color.red;
-		else if(m_type==JewelType.enRecovery)
-			renderer.material.color=Color.green;
-		else if(m_type==JewelType.enStorm)
-			renderer.material.color=Color.cyan;
-		else if(m_type==JewelType.enAttack)
-			renderer.material.color=Color.magenta;
-		else if(m_type==JewelType.enDummy)
-			renderer.material.color=Color.gray;
-		if(m_Selected)
-		{
-			renderer.material.color/=3;
-
+		while (true) {
+			if (m_FaceObj[0]) {
+				for(int n=0;n<(int)FaceAnim.enmNum;n++)
+				{
+					//Debug.Log(m_FaceObj[n]);
+					m_FaceObj[n].renderer.material.color=col;
+				}
+				UpdataAnim(0f,0f);
+				ShowState();
+				yield break;
+						
+			} else
+				yield return new WaitForFixedUpdate();
 		}
+		
+	}
+	void SetColor(Color col)
+	{
+		StartCoroutine(WaitToShowColor(col));
+	}
+	private IEnumerator WaitToShowAnim(FaceAnim anim)
+	{
+		while (true) {
+			if (m_FaceObj[0]) {
+				for(int n=0;n<(int)FaceAnim.enmNum;n++)
+				{
+					if((int)anim==n)
+						m_FaceObj[n].SetActive(true);
+					else
+						m_FaceObj[n].SetActive(false);		
+				}
+				yield break;
+						
+			} else
+				yield return new WaitForFixedUpdate();
+		}
+		
+	}
+	void ShowAim(FaceAnim anim)
+	{
+		StartCoroutine(WaitToShowAnim(anim));
+	}
+	void ShowState()
+	{	
+		switch(m_state)
+		{
+	
+		case JewelState.enIdle:
+			ShowAim(FaceAnim.enmNormal);
+			break;
+		case JewelState.enTouched:
+			ShowAim(FaceAnim.enmTouch);
+			break;	
+		case JewelState.enEffecting:
+			ShowAim(FaceAnim.enmHit);
+			break;
+		case JewelState.enSelected:
+			ShowAim(FaceAnim.enmDrag);
+			break;
+		}
+		
 	}
 	public JewelType GetJewelType()
 	{
 		return m_type;
 	}
 	
-	public void SetSelected(bool selected)
-	{
-		m_Selected=selected;
-		ShowState();
-	}
-	
-	public bool GetSelected()
-	{
-		return m_Selected;
-	}
 	public bool IsCanFall()
 	{
-		return m_state==JewelState.enIdle||m_state==JewelState.enMoving;
+		return m_state==JewelState.enIdle||m_state==JewelState.enTouched;
 	}
 	public bool IsCanSwap()
 	{
-		return m_state==JewelState.enIdle;
+		return m_state==JewelState.enIdle||m_state==JewelState.enSelected||m_state==JewelState.enTouched;
 	}
+	public bool IsMoving()
+	{
+		return m_bMoving;
+	}
+
 	public void SetState(JewelState state)
 	{
 		m_state=state;
+		Debug.Log(m_state);
+		ShowState();
+	}
+	public void UpdataAnim(float x,float y)
+	{
+		Animator anim = GetComponent<Animator>();
+		anim.SetFloat("X",x);
+		anim.SetFloat("Y",y);
 	}
 	//public void SetState(JewelState state)
 	//{
