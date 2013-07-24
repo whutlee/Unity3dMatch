@@ -15,6 +15,7 @@ public class game : MonoBehaviour
 	private jewel[,] Jewels = new jewel[10, 10];
 	private int LineNum = 6;
 	private jewel selected;
+	private jewel touched;
 	private float clickDelay = 0f;
 	private static game instance = null;
 	
@@ -25,6 +26,8 @@ public class game : MonoBehaviour
 	internal GameTurn lastTurn;
 	private int CurJewelNum=0;
 	private int CurCombo=0;
+	private bool bLButtonDown=false;
+	private Vector3 LastMousePos;
 
 	public static game Instance {
 		get {
@@ -210,6 +213,7 @@ public class game : MonoBehaviour
 		gameObj = Instantiate (JewelPre, new Vector3 (0f, 0f, 0f), Quaternion.identity) as GameObject;		
 		obj = gameObj.GetComponent ("jewel") as jewel;
 		obj.m_obj = gameObj;
+		gameObj.transform.Rotate(90,180,0);
 		if(++CurJewelNum>LineNum*LineNum)
 			Debug.Log("Fatal error ,jewel num is more than max");
 		return obj;
@@ -268,6 +272,8 @@ public class game : MonoBehaviour
 	void StartGame ()
 	{
 		OnGameStart();
+		touched=null;
+		selected=null;
 		ClearMap();
 		ChangeTurn (GameTurn.enYourTurn);
 		GenerateMap ();
@@ -304,7 +310,9 @@ public class game : MonoBehaviour
 	
 	void ResetPos (jewel obj)
 	{
+		Debug.Log("ResetPos");
 		obj.transform.position = GetPosFromGrid (obj.X, obj.Y);
+		Debug.Log(obj.transform.position);
 	}
 	
 	void ClearJewel (List<GridPos> clearPos)
@@ -433,7 +441,7 @@ public class game : MonoBehaviour
 			ChangeTurn (GameTurn.enYourTurn);
 		} else if (t == GameTurn.enYourTurn) {
 			ChangeTurn (GameTurn.enAITurn);
-			CheckAI ();
+			StartCoroutine(WaitCheckAI());
 		}
 	}
 
@@ -518,14 +526,26 @@ public class game : MonoBehaviour
 	{
 		for (int i=0; i<LineNum-1; i++) {
 			for (int j=0; j<LineNum-1; j++) {
-				if (!Jewels [i, j].IsCanSwap ())
+				if (!Jewels [i, j].IsCanSwap ()||Jewels [i, j].IsMoving())
 					return false;
 				
 			}
 		}
 		return true;
 	}
-
+	private IEnumerator WaitCheckAI()
+	{
+		while(true)
+		{
+			if(IsAllJewelIdle())
+			{
+				CheckAI ();
+				yield break;
+			}
+			else
+				 yield return new WaitForFixedUpdate();
+		}
+	}
 	void CheckAI ()
 	{
 		if (turn == GameTurn.enAITurn) {
@@ -542,18 +562,33 @@ public class game : MonoBehaviour
 			StartCoroutine ("DelayToggleTurn", GameTurn.enAITurn);
 		}
 	}
-
+	void SetTouched (jewel obj)
+	{
+		if(touched)
+			touched.SetState(JewelState.enIdle);
+		touched=obj;
+		if(touched)
+			touched.SetState(JewelState.enTouched);
+	}
+	void SetSelected(jewel obj)
+	{
+		if(selected)
+			selected.SetState(JewelState.enIdle);
+		selected=obj;
+		if(selected)
+			selected.SetState(JewelState.enSelected);
+	}
 	void OnPickObj (jewel obj)
 	{
 		if (selected) {
-			selected.SetSelected (false);
+
 			if (selected == obj) {
 				Debug.Log ("cancel swap");
 			}
 			if (!selected.IsCanSwap () || !obj.IsCanSwap ()) {
 				Debug.Log ("can not swap");
 							
-				selected = null;
+				SetSelected( null);
 			} else if (IsNeighbour (selected, obj)) {
 							
 				if (IsSwapUseful (selected, obj)) {
@@ -566,12 +601,47 @@ public class game : MonoBehaviour
 					OnSwapFailed (selected, obj);
 				}
 			}
-			selected = null;
+			SetSelected( null);
 		} else {
 			Debug.Log ("select");
-			selected = obj;
-			selected.SetSelected (true);
+			SetSelected( obj);
+		
 		}
+	}
+	
+	jewel GetMouseObject()
+	{
+		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast (ray, out hit)) {
+				jewel obj = hit.collider.gameObject.GetComponent ("jewel") as jewel;
+				if (obj) {
+					return obj;
+				}
+					
+			}
+		return null;
+	}
+	void OnLButtonDown(Vector3 pos)
+	{
+		bLButtonDown=true;
+		LastMousePos=pos;
+		jewel obj= GetMouseObject();
+		OnPickObj(obj);
+		Debug.Log("OnLButtonDown");
+	}
+	
+	void OnLButtonUp()
+	{
+		bLButtonDown=false;
+		if(selected)
+			selected.UpdataAnim(0,0);
+		if(touched)
+			OnPickObj(touched);
+		else
+			SetSelected(null);
+		SetTouched(null);
+		Debug.Log("OnLButtonUp");
 	}
 	
 	void CheckGameInput()
@@ -583,7 +653,11 @@ public class game : MonoBehaviour
 		if (Input.GetKey (KeyCode.Mouse0)) {
 			hasInput = true;
 			pos = Input.mousePosition;
-		} 
+			if(!bLButtonDown)
+				OnLButtonDown(pos);
+		}
+		else if(bLButtonDown)
+			OnLButtonUp();
 		
         foreach (Touch touch in Input.touches) {
 			if (touch.phase == TouchPhase.Began) {
@@ -591,28 +665,44 @@ public class game : MonoBehaviour
 				pos = touch.position;
 			}
 		}
-		
+
 		if(hasInput)
-		{			
+		{		
 			ClearOperate ();
-			Ray ray = Camera.main.ScreenPointToRay (pos);
+			/*Ray ray = Camera.main.ScreenPointToRay (pos);
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit)) {
 				jewel obj = hit.collider.gameObject.GetComponent ("jewel") as jewel;
+				Debug.Log("here");
 				if (obj) {
 					OnPickObj (obj);
 				}
 					
-			}
+			}*/
 		}
 	}
-
+	void UpdateSelectAnim()
+	{
+		if(bLButtonDown)
+		{
+			if(selected)
+			{
+				selected.UpdataAnim(Input.mousePosition.x-LastMousePos.x,Input.mousePosition.y-LastMousePos.y);
+			}
+			
+			jewel obj=GetMouseObject();
+			if(obj!=selected)
+				SetTouched(obj);
+				
+		}
+	}
 	void Update ()
 	{
 		CheckJewels ();
 		PreClearJewels (Time.deltaTime);
 		CheckHelpInput ();
 		CheckGameInput();
+		UpdateSelectAnim();
 		
 	}
 
@@ -648,7 +738,8 @@ public class game : MonoBehaviour
 		{
 			if(obj.r.IsCanSwap()&&obj.l.IsCanSwap())
 			{
-				yield return new WaitForSeconds(0.1f);
+				yield return new WaitForSeconds(0.2f);
+				Debug.Log("FaildAnimation");
 				SwapJewel(obj.l,obj.r);
 				yield break;
 			}
@@ -664,7 +755,7 @@ public class game : MonoBehaviour
 		PairJewel obj =new PairJewel();
 		obj.l=l;
 		obj.r=r;
-		StartCoroutine("FaildAnimation", obj);
+		StartCoroutine(FaildAnimation(obj));
 	}
 
 	void OnClear (List<GridPos> clearPos)

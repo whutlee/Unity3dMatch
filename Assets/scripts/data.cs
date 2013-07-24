@@ -1,5 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
+
+public	enum FaceAnim
+	{
+		enmHit,
+		enmNormal,
+		enmTouch,
+		enmDrag,
+		enmNum
+	}
 public enum JewelType
 {
 	enNone,
@@ -21,8 +30,9 @@ public enum GameTurn
 public enum JewelState
 {
 	enIdle,
-	enMoving,
-	enEffecting
+	enEffecting,
+	enTouched,
+	enSelected
 }
 public struct PairJewel
 {
