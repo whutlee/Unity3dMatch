@@ -37,9 +37,21 @@ public class player : MonoBehaviour {
 		}
 	}
 	
-	public void OnAttack(JewelType type,int num)
+	public void OnGameStart()
 	{
-		StartCoroutine(PlayAnim(1));
+		curhp = hp = max_hp;
+		StartCoroutine(PlayAnim(4));		
+	}
+	
+	public void OnAttack(JewelType type,int num,int combo)
+	{
+		if(combo == 0 )
+			StartCoroutine(PlayAnim(1));
+		else if(combo == 1 )
+			StartCoroutine(PlayAnim(5));
+		else
+			StartCoroutine(PlayAnim(6));
+			
 		player p = target.GetComponent<player>();
 		p.hp -= num * attack;
 		if(p.hp <= 0)
@@ -59,6 +71,8 @@ public class player : MonoBehaviour {
 	public void OnDie()
 	{
 		StartCoroutine(PlayAnim(2));
+		game g = GameObject.Find("cube").GetComponent<game>();
+		g.OnPlayerDie(this);
 	}
 	
 	void OnGUI()
@@ -70,8 +84,6 @@ public class player : MonoBehaviour {
 				
 		float blood_width = bloodSize.x * curhp/100;
 		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,bloodSize.x,bloodSize.y),blood_black);
-		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,blood_width,bloodSize.y),blood_red);
-
-	
+		GUI.DrawTexture(new Rect(position.x - (bloodSize.x/2),position.y - bloodSize.y ,blood_width,bloodSize.y),blood_red);	
 	}
 }

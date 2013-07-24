@@ -4515,10 +4515,13 @@ MonoBehaviour:
   m_Name: 
   JewelPre: {fileID: 100000, guid: 719793b7f07870a46936a4ecf0da485e, type: 2}
   DestroyPre: {fileID: 100000, guid: 4030a3b2e1016ad4f8950ba9074d04db, type: 2}
-  player: {fileID: 2137058088}
+  pc: {fileID: 2137058088}
   npc: {fileID: 1646825698}
   DestoryDelay: .5
   ChangeTurnDelay: 1.20000005
+  texWin: {fileID: 2800000, guid: c35e1854702607547a95089d7778613b, type: 3}
+  texLose: {fileID: 2800000, guid: 0ed8fe42b4882264b91675a99a8f1388, type: 3}
+  texRestart: {fileID: 2800000, guid: 41787aee163dd884cbe47c24eafaa9a7, type: 3}
 --- !u!1 &1884122787
 GameObject:
   m_ObjectHideFlags: 0
