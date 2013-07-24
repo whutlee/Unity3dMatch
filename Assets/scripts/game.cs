@@ -803,11 +803,12 @@ public class game : MonoBehaviour
 	{
 		if(Result != GameResult.enNone)
 		{
+			
 			if(Result == GameResult.enWin)
-				GUI.DrawTexture(new Rect(200,100 ,256,128),texWin);
+				GUI.DrawTexture(new Rect(Screen.width / 2 - 128,Screen.height/2 - 64 ,256,128),texWin);
 			else if(Result == GameResult.enLose)
-				GUI.DrawTexture(new Rect(200,100 ,256,128),texLose);
-			if(GUI.Button(new Rect(500,330 ,128,64),texRestart))
+				GUI.DrawTexture(new Rect(Screen.width / 2 - 128,Screen.height/2 - 64 ,256,128),texLose);
+			if(GUI.Button(new Rect(Screen.width -200 ,Screen.height - 100 ,128,64),texRestart))
 			{
 				StartGame();
 			}
